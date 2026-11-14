@@ -3,10 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>업무 말투 변환기</title>
+    <title>업무 말투 변환기 — BizTalk</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 </head>
 <body>
-    <h1>업무 말투 변환기</h1>
-    <p>서버와 프론트엔드가 정상적으로 연결되었습니다.</p>
+    <div class="app-container">
+        <!-- 헤더 영역 -->
+        <header class="app-header">
+            <div class="logo-group">
+                <span class="logo-icon">💼</span>
+                <div>
+                    <h1 class="app-title">업무 말투 변환기</h1>
+                    <p class="app-subtitle">편하게 적은 문장을 상황과 대상에 최적화된 비즈니스 언어로 자동 변환합니다.</p>
+                </div>
+            </div>
+            <div class="header-badge">
+                <span class="badge-dot"></span> Solar-Pro4 AI
+            </div>
+        </header>
+
+        <!-- 메인 콘텐츠 카드 -->
+        <main class="converter-card">
+            <!-- 수신 대상 선택 탭 -->
+            <section class="target-selection-section">
+                <label class="section-label">1. 메시지를 받는 상대방을 선택하세요</label>
+                <div class="target-btn-group" role="tablist">
+                    <button type="button" class="target-btn active" data-target="boss" role="tab" aria-selected="true">
+                        <span class="target-icon">👔</span>
+                        <div class="target-info">
+                            <span class="target-title">상사 / 임원</span>
+                            <span class="target-desc">격식 있는 경어체, 결론 중심</span>
+                        </div>
+                    </button>
+                    <button type="button" class="target-btn" data-target="colleague" role="tab" aria-selected="false">
+                        <span class="target-icon">🤝</span>
+                        <div class="target-info">
+                            <span class="target-title">타팀 동료</span>
+                            <span class="target-desc">정중하고 협조적인 업무 요청</span>
+                        </div>
+                    </button>
+                    <button type="button" class="target-btn" data-target="client" role="tab" aria-selected="false">
+                        <span class="target-icon">🌐</span>
+                        <div class="target-info">
+                            <span class="target-title">고객 / 외부</span>
+                            <span class="target-desc">친절하고 신뢰감 있는 서비스 어조</span>
+                        </div>
+                    </button>
+                    <button type="button" class="target-btn" data-target="team" role="tab" aria-selected="false">
+                        <span class="target-icon">👥</span>
+                        <div class="target-info">
+                            <span class="target-title">팀 내 동료</span>
+                            <span class="target-desc">간결하고 빠른 실무 피드백</span>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 텍스트 변환 작업 영역 (좌우 2분할 레이아웃) -->
+            <section class="editor-grid">
+                <!-- 원문 입력 영역 -->
+                <div class="editor-box input-box">
+                    <div class="box-header">
+                        <label for="inputText" class="box-title">
+                            <span>✏️ 하고 싶은 말을 편하게 입력하세요</span>
+                        </label>
+                        <div class="box-actions">
+                            <button type="button" id="exampleBtn" class="text-action-btn">💡 예시 입력</button>
+                            <button type="button" id="clearBtn" class="text-action-btn">지우기</button>
+                        </div>
+                    </div>
+                    <div class="textarea-wrapper">
+                        <textarea 
+                            id="inputText" 
+                            placeholder="예: 내일까지 보고서 제출 어려울 것 같음&#10;예: 지난주 요청드린 데이터 오늘까지 보내주세요" 
+                            rows="9"
+                            maxlength="2000"
+                        ></textarea>
+                    </div>
+                    <div class="box-footer">
+                        <span class="char-count"><span id="charCount">0</span> / 2000자</span>
+                        <span class="shortcut-tip">Ctrl + Enter로 빠른 변환</span>
+                    </div>
+                </div>
+
+                <!-- 중앙 변환 실행 액션 -->
+                <div class="action-divider">
+                    <button type="button" id="convertBtn" class="convert-btn">
+                        <span class="btn-text">변환하기</span>
+                        <span class="btn-icon">⚡</span>
+                        <div class="spinner hidden" id="spinner"></div>
+                    </button>
+                </div>
+
+                <!-- 변환 결과 출력 영역 -->
+                <div class="editor-box output-box">
+                    <div class="box-header">
+                        <label for="outputText" class="box-title">
+                            <span>✨ 변환된 업무 메시지</span>
+                        </label>
+                        <button type="button" id="copyBtn" class="copy-btn" title="클립보드에 복사">
+                            <span class="copy-icon">📋</span>
+                            <span class="copy-text">복사하기</span>
+                        </button>
+                    </div>
+                    <div class="textarea-wrapper">
+                        <textarea 
+                            id="outputText" 
+                            placeholder="변환 결과가 여기에 표시됩니다." 
+                            rows="9" 
+                            readonly
+                        ></textarea>
+                        <!-- 로딩 오버레이 -->
+                        <div id="loadingOverlay" class="loading-overlay hidden">
+                            <div class="loading-spinner"></div>
+                            <p class="loading-text">비즈니스 말투로 다듬고 있습니다...</p>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <span id="outputAudienceLabel" class="target-badge">상사 / 임원 톤</span>
+                        <span class="status-tip">변환 후 바로 복사해 사용하세요.</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 푸터 영역 -->
+        <footer class="app-footer">
+            <p>BizTalk — Upstage Solar-Pro4 모델 기반 One Day 업무 말투 변환기</p>
+        </footer>
+    </div>
+
+    <!-- 토스트 알림 컴포넌트 -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script src="/js/app.js"></script>
 </body>
 </html>
